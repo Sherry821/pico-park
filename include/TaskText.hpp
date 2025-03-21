@@ -26,14 +26,14 @@ private:
     }
 
     static constexpr std::string_view s_PhaseTasks[6] = {
-            "Replace the image of m_giraffe with giraffe.png in Resources!",
+            "  ",
             "Make the giraffe move into the red area using the keyboard!",
             "Make the chest disappear when the giraffe touches it!",
             "Write a program to give your bee friend an animation!",
             "Write a program to open the door when your character touches it!",
             "Design a program to countdown, stop animation after OK display"
     };
-    static constexpr std::string_view s_Validation = "Press Enter to validate";
+    static constexpr std::string_view s_Validation = "Press Enter to proceed to the next page.";
 };
 
 

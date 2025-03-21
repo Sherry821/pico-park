@@ -30,9 +30,15 @@ private:
 
 private:
     enum class Phase {
-        CHANGE_CHARACTER_IMAGE,
-        ABLE_TO_MOVE,
-        COLLIDE_DETECTION,
+        Welcome,
+        PICK_STAGE,
+        STAGE_ONE,
+        // STAGE_TWO,
+        // STAGE_THREE,
+        // STAGE_FOUR,
+        //CHANGE_CHARACTER_IMAGE,
+        //ABLE_TO_MOVE,
+        //COLLIDE_DETECTION,
         BEE_ANIMATION,
         OPEN_THE_DOORS,
         COUNTDOWN,
@@ -40,9 +46,12 @@ private:
 
 
     State m_CurrentState = State::START;
-    Phase m_Phase = Phase::CHANGE_CHARACTER_IMAGE;
+    Phase m_Phase = Phase::Welcome;
 
     Util::Renderer m_Root;
+
+    std::shared_ptr<Character> m_pico1;
+    std::shared_ptr<Character> m_pico2;
 
     std::shared_ptr<Character> m_Giraffe;
     std::shared_ptr<Character> m_Chest;
