@@ -11,12 +11,14 @@ public:
 
     // 渲染地圖（如果需要的話）
     static void RenderMap(const std::vector<std::vector<int>>& matrix);
-
-private:
+    static int CountFilledBlocks(const std::vector<std::vector<int>>& matrix);
+    static void RenderMapToFile(const std::vector<std::vector<int>>& matrix, const std::string& outputFile);
     // ANSI escape codes for colors (如果需要的話)
     static const std::string ORANGE;
     static const std::string WHITE;
     static const std::string RESET;
+
+private:
 };
 
 #endif // MAP_HPP
