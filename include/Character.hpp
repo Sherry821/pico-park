@@ -23,6 +23,10 @@ public:
 
     [[nodiscard]] bool GetVisibility() const { return m_Visible; }
 
+    void Isjumping();
+
+    void Ismoving();
+
     void SetImage(const std::string& ImagePath);
 
     void SetPosition(const glm::vec2& Position) { m_Transform.translation = Position; }
@@ -33,11 +37,13 @@ public:
         return false;
     }
 
-    // TODO: Add and implement more methods and properties as needed to finish Giraffe Adventure.
+    bool IsStanding(const std::shared_ptr<Character>& character) const;
+
+
 
 private:
     void ResetPosition() { m_Transform.translation = {0, 0}; }
-
+    int JumpVelocity = 0;
     std::string m_ImagePath;
 };
 

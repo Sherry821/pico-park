@@ -12,6 +12,10 @@ public:
             std::make_unique<Util::Image>(GA_RESOURCE_DIR"/Image/Background/Welcome.png"), -10) {
     }
 
+    // void NextPhase(const int phase) {
+    //     auto temp = std::dynamic_pointer_cast<Util::Image>(m_Drawable);
+    //     temp->SetImage(ImagePath(phase));
+    // }
     void NextPhase(const int phase) {
         auto temp = std::dynamic_pointer_cast<Util::Image>(m_Drawable);
         // 特別處理 Phase 3，使用地圖渲染
@@ -23,7 +27,6 @@ public:
             temp->SetImage(ImagePath(phase));
         }
     }
-
 private:
     inline std::string ImagePath(const int phase) {
         return GA_RESOURCE_DIR"/Image/Background/phase" + std::to_string(phase) + ".png";

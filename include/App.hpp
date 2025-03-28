@@ -27,6 +27,7 @@ public:
 
 private:
     void ValidTask();
+    void CreateMapTiles(const std::vector<std::vector<int>>& map);
 
     void CreateMapTiles(const std::vector<std::vector<int>>& map);
 
@@ -46,11 +47,13 @@ private:
         COUNTDOWN,
     };
 
-
     State m_CurrentState = State::START;
     Phase m_Phase = Phase::Welcome;
 
     Util::Renderer m_Root;
+
+    std::vector<std::vector<int>> m_Map;
+    std::vector<std::shared_ptr<Character>> m_MapTiles;
 
     std::shared_ptr<Character> m_pico1;
     std::shared_ptr<Character> m_pico2;

@@ -35,6 +35,19 @@ void App::Start() {
     m_Chest->SetVisible(false);
     m_Root.AddChild(m_Chest);
 
+    // 使用絕對路徑或更靈活的相對路徑
+    std::string mapPath = GA_RESOURCE_DIR"/Map/first.txt";
+    LOG_INFO("Attempting to load map from: {}", mapPath);
+    m_Map = Map::LoadMap(mapPath);
+
+    // 額外的除錯輸出
+    if (m_Map.empty()) {
+        LOG_ERROR("Map loading failed. Please check the file path and permissions.");
+    } else {
+        LOG_INFO("Map loaded successfully. Rows: {}", m_Map.size());
+    }
+
+
     std::vector<std::string> beeImages;
     beeImages.reserve(2);
     for (int i = 0; i < 2; ++i) {
