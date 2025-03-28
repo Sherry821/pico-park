@@ -11,18 +11,25 @@ const std::string Map::WHITE = "\033[37m";
 const std::string Map::RESET = "\033[0m";
 
 
+
 std::vector<std::vector<int>> Map::LoadMap(const std::string& filename) {
     std::vector<std::vector<int>> matrix;
     std::ifstream file(filename);
 
     if (!file.is_open()) {
         LOG_ERROR("Failed to open map file: {}", filename);
+        LOG_ERROR("Failed to open map file: {}", filename);
         return matrix;
     }
+
 
     std::string line;
     while (std::getline(file, line)) {
         std::vector<int> row;
+        std::istringstream iss(line);
+        int value;
+        while (iss >> value) {
+            row.push_back(value);
         std::istringstream iss(line);
         int value;
         while (iss >> value) {
@@ -34,8 +41,10 @@ std::vector<std::vector<int>> Map::LoadMap(const std::string& filename) {
     }
 
     LOG_INFO("Loaded map with {} rows", matrix.size());
+    LOG_INFO("Loaded map with {} rows", matrix.size());
     return matrix;
 }
+
 
 void Map::RenderMap(const std::vector<std::vector<int>>& matrix) {
     LOG_INFO("Rendering map to console:");

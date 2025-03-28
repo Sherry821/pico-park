@@ -31,6 +31,7 @@ private:
     inline std::string ImagePath(const int phase) {
         return GA_RESOURCE_DIR"/Image/Background/phase" + std::to_string(phase) + ".png";
     }
+
     // 新增方法：將地圖轉換為背景圖
     std::string CreateMapImage(const std::vector<std::vector<int>>& map) {
         // TODO: 實現地圖到圖像的轉換
