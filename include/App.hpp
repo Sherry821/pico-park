@@ -29,8 +29,6 @@ private:
     void ValidTask();
     void CreateMapTiles(const std::vector<std::vector<int>>& map);
 
-    void CreateMapTiles(const std::vector<std::vector<int>>& map);
-
 private:
     enum class Phase {
         Welcome,
@@ -61,9 +59,6 @@ private:
     std::shared_ptr<Character> m_Giraffe;
     std::shared_ptr<Character> m_Chest;
     std::vector<std::shared_ptr<Character>> m_Doors;
-
-    std::vector<std::vector<int>> m_Map;
-    std::vector<std::shared_ptr<Character>> m_MapTiles;
 
     std::shared_ptr<AnimatedCharacter> m_Bee;
     std::shared_ptr<AnimatedCharacter> m_Ball;
