@@ -54,18 +54,6 @@ void App::Start() {
         beeImages.emplace_back(GA_RESOURCE_DIR"/Image/Character/bee_" + std::to_string(i + 1) + ".png");
     }
 
-    // 使用絕對路徑或更靈活的相對路徑
-    std::string mapPath = "D:/2025-OOPL/PTSD-Practice-Giraffe-Adventure/Resources/Map/first.txt";
-    LOG_INFO("Attempting to load map from: {}", mapPath);
-    m_Map = Map::LoadMap(mapPath);
-
-    // 額外的除錯輸出
-    if (m_Map.empty()) {
-        LOG_ERROR("Map loading failed. Please check the file path and permissions.");
-    } else {
-        LOG_INFO("Map loaded successfully. Rows: {}", m_Map.size());
-    }
-
     m_Bee = std::make_shared<AnimatedCharacter>(beeImages);
     m_Bee->SetZIndex(5);
     m_Bee->SetVisible(false);
@@ -83,7 +71,6 @@ void App::Start() {
 
     m_PRM = std::make_shared<PhaseResourceManger>();
     m_Root.AddChildren(m_PRM->GetChildren());
-
 
     m_CurrentState = State::UPDATE;
 }
