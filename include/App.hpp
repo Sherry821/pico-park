@@ -25,11 +25,12 @@ public:
 
     void End(); // NOLINT(readability-convert-member-functions-to-static)
 
-private:
-    void ValidTask();
     void CreateMapTiles(const std::vector<std::vector<int>>& map);
 
-    void CreateMapTiles(const std::vector<std::vector<int>>& map);
+private:
+    void ValidTask();
+
+
 
 private:
     enum class Phase {
@@ -61,9 +62,6 @@ private:
     std::shared_ptr<Character> m_Giraffe;
     std::shared_ptr<Character> m_Chest;
     std::vector<std::shared_ptr<Character>> m_Doors;
-
-    std::vector<std::vector<int>> m_Map;
-    std::vector<std::shared_ptr<Character>> m_MapTiles;
 
     std::shared_ptr<AnimatedCharacter> m_Bee;
     std::shared_ptr<AnimatedCharacter> m_Ball;
