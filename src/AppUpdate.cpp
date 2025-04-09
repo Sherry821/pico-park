@@ -70,6 +70,37 @@ void App::Update() {
         newPosition2.x += speed2;  // 右移
     }
 
+    // 更新相機位置
+    if (m_Camera && m_pico1 && m_pico2) {
+        m_Camera->Update(m_pico1, m_pico2);
+
+        // 更新地圖磚塊的可見性
+        if (m_MapManager) {
+            m_MapManager->UpdateVisibility(*m_Camera);
+        }
+
+        // 檢查角色是否超出邊界
+        glm::vec2 adjustment1 = m_Camera->CheckBoundaries(m_pico1->GetPosition(), {50.0f, 50.0f}); // 假設角色大小
+        glm::vec2 adjustment2 = m_Camera->CheckBoundaries(m_pico2->GetPosition(), {50.0f, 50.0f}); // 假設角色大小
+
+        // 如果角色超出邊界，調整位置
+        if (glm::length(adjustment1) > 0.0f) {
+            m_pico1->SetPosition(m_pico1->GetPosition() + adjustment1);
+        }
+        if (glm::length(adjustment2) > 0.0f) {
+            m_pico2->SetPosition(m_pico2->GetPosition() + adjustment2);
+        }
+
+        // 將角色位置轉換為相對於相機的位置
+        glm::vec2 screenPos1 = m_Camera->WorldToScreenPosition(m_pico1->GetPosition());
+        glm::vec2 screenPos2 = m_Camera->WorldToScreenPosition(m_pico2->GetPosition());
+
+        // 更新角色位置
+        m_pico1->SetPosition(screenPos1);
+        m_pico2->SetPosition(screenPos2);
+    }
+
+
     // ---- 重力與跳躍的更新邏輯 ----
     // if (isJumping1) {
     //     velocityY1 += gravity*0.2f;

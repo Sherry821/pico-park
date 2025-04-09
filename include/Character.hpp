@@ -35,6 +35,13 @@ public:
 
     bool IsStanding(const std::shared_ptr<Character>& character) const;
 
+    glm::vec2 GetScaledSize() const {
+        // 假設有一個原始大小
+        glm::vec2 originalSize(100.0f, 100.0f); // 根據實際情況調整
+        return originalSize * m_Transform.scale;
+    }
+
+
 
 
 private:
