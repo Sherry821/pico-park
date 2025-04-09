@@ -24,6 +24,10 @@ public:
     // 獲取地圖邊界
     void GetMapBoundaries(float& left, float& right, float& top, float& bottom) const;
 
+    const std::vector<std::shared_ptr<Character>>& GetMapTiles() const {
+        return m_MapTiles;
+    }
+
 private:
     // 創建地圖磚塊
     void CreateMapTiles(const std::vector<std::vector<int>>& map);

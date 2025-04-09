@@ -49,6 +49,10 @@ void App::Start() {
     m_MapManager->GetMapBoundaries(left, right, top, bottom);
     m_Camera->SetBoundaries(left, right, top, bottom);
 
+    for (auto& tile : m_MapManager->GetMapTiles()) {
+        tile->SetVisible(false);
+    }
+
     if (m_Map.empty()) {
         LOG_ERROR("Map loading failed. Please check the file path and permissions.");
     } else {
