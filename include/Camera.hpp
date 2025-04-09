@@ -1,4 +1,3 @@
-// Camera.hpp
 #pragma once
 #include <glm/glm.hpp>
 #include <memory>
@@ -17,6 +16,8 @@ public:
     glm::vec2 CheckBoundaries(const glm::vec2& characterPos, const glm::vec2& characterSize) const;
 
     const glm::vec2& GetPosition() const { return m_Position; }
+    float GetViewWidth() const { return m_ViewWidth; }
+    float GetViewHeight() const { return m_ViewHeight; }
 
 private:
     glm::vec2 m_Position;

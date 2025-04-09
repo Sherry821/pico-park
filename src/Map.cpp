@@ -54,7 +54,7 @@ void App::CreateMapTiles(const std::vector<std::vector<int>>& map){
 
     // 檢查地圖是否為空
     if (map.empty()){
-        LOG_ERROR("Map is empty, cannot create tiles");
+        LOG_ERROR("Map is empty, cannot create tiles?");
         return;
     }
 

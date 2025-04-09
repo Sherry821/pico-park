@@ -54,20 +54,42 @@ void App::ValidTask() {
 
         case Phase::BEE_ANIMATION:
             isBeeLooping = m_Bee->IsLooping();
-        isBeePlaying = m_Bee->IsPlaying();
+            isBeePlaying = m_Bee->IsPlaying();
 
-        if (isBeeLooping && isBeePlaying) {
+            if (isBeeLooping && isBeePlaying) {
+                m_Phase = Phase::STAGE_THREE; // 改為直接進入 STAGE_THREE
+                m_Giraffe->SetVisible(false);
+                m_Bee->SetVisible(false);
+                // 確保地圖在 STAGE_THREE 開始時可見
+                for (auto& tile : m_MapManager->GetMapTiles()) {
+                tile->SetVisible(true);
+                }
+                // 重置角色位置到適當的起始點
+                m_pico1->SetPosition({-100.0f, -140.5f});
+                m_pico2->SetPosition({50.0f, -140.5f});
+                m_pico1->SetVisible(true);
+                m_pico2->SetVisible(true);
+
+                m_PRM->NextPhase();
+            } else {
+                LOG_DEBUG("The bee animation is {} but not {}", isBeeLooping ? "looping" : "playing",
+                      isBeeLooping ? "playing" : "looping");
+            }
+        break;
+
+        case Phase::STAGE_THREE:
+            // 完成第三階段後的處理
             m_Phase = Phase::OPEN_THE_DOORS;
             m_Giraffe->SetPosition({-112.5f, -140.5f});
             m_Giraffe->SetVisible(true);
             m_Bee->SetVisible(false);
+            // 隱藏地圖磚塊
+            for (auto& tile : m_MapManager->GetMapTiles()) {
+                tile->SetVisible(false);
+            }
             std::for_each(m_Doors.begin(), m_Doors.end(), [](const auto& door) { door->SetVisible(true); });
 
             m_PRM->NextPhase();
-        } else {
-            LOG_DEBUG("The bee animation is {} but not {}", isBeeLooping ? "looping" : "playing",
-                      isBeeLooping ? "playing" : "looping");
-        }
         break;
 
         case Phase::OPEN_THE_DOORS:

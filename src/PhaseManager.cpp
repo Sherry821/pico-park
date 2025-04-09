@@ -12,4 +12,9 @@ void PhaseResourceManger::NextPhase() {
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
     m_Background->NextPhase(m_Phase);
     m_TaskText->NextPhase(m_Phase++);
+
+    if (m_Phase == 4) {
+        LOG_INFO("Entering Phase 4 - Enabling map display");
+        // 背景已在 NextPhase 中設置為 phase3.png
+    }
 }
