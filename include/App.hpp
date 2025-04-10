@@ -30,9 +30,6 @@ public:
 private:
     void ValidTask();
 
-
-
-private:
     enum class Phase {
         Welcome,
         PICK_STAGE,

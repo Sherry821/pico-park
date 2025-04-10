@@ -36,8 +36,7 @@ std::vector<std::vector<int>> Map::LoadMap(const std::string& filename) {
     return matrix;
 }
 
-
-void Map::RenderMap(const std::vector<std::vector<int>>& matrix){
+void Map::RenderMap(const std::vector<std::vector<int>>& matrix) {
     LOG_INFO("Rendering map to console:");
 
     // 設置一些顏色用於不同的地圖元素
