@@ -1,7 +1,9 @@
 #include "App.hpp"
+#include "Camera.hpp"
 #include "./Util/GameObject.hpp"
 #include "Util/Logger.hpp"
 #include "Map.hpp"
+#include "MapManager.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");
@@ -35,18 +37,27 @@ void App::Start() {
     m_Chest->SetVisible(false);
     m_Root.AddChild(m_Chest);
 
-    // 使用絕對路徑或更靈活的相對路徑
-    std::string mapPath = GA_RESOURCE_DIR"/Map/first.txt";
-    LOG_INFO("Attempting to load map from: {}", mapPath);
-    m_Map = Map::LoadMap(mapPath);
+    m_Camera = std::make_unique<Camera>(800.0f, 600.0f); // 假設視窗大小為 800x600
+    m_MapManager = std::make_unique<MapManager>(m_Root);
 
-    // 額外的除錯輸出
+    std::string mapPath = GA_RESOURCE_DIR"/Map/first.txt";
+    m_Map = Map::LoadMap(mapPath);
+    m_MapManager->LoadMap(mapPath);
+
+    // 設置相機邊界
+    float left, right, top, bottom;
+    m_MapManager->GetMapBoundaries(left, right, top, bottom);
+    m_Camera->SetBoundaries(left, right, top, bottom);
+
+    for (auto& tile : m_MapManager->GetMapTiles()) {
+        tile->SetVisible(false);
+    }
+
     if (m_Map.empty()) {
         LOG_ERROR("Map loading failed. Please check the file path and permissions.");
     } else {
         LOG_INFO("Map loaded successfully. Rows: {}", m_Map.size());
     }
-
 
     std::vector<std::string> beeImages;
     beeImages.reserve(2);

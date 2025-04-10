@@ -8,6 +8,8 @@
 #include "Util/Text.hpp"
 #include "PhaseResourceManger.hpp"
 #include "AnimatedCharacter.hpp"
+#include "Camera.hpp"
+#include "MapManager.hpp"
 
 class App {
 public:
@@ -35,8 +37,8 @@ private:
         PICK_STAGE,
         STAGE_ONE,
         // STAGE_TWO,
-        // STAGE_THREE,
-        // STAGE_FOUR,
+        STAGE_THREE,
+         STAGE_FOUR,
         //CHANGE_CHARACTER_IMAGE,
         //ABLE_TO_MOVE,
         //COLLIDE_DETECTION,
@@ -64,6 +66,10 @@ private:
     std::shared_ptr<AnimatedCharacter> m_Ball;
 
     std::shared_ptr<PhaseResourceManger> m_PRM;
+
+    std::unique_ptr<Camera> m_Camera;
+    std::unique_ptr<MapManager> m_MapManager;
+
 
     bool m_EnterDown = false;
 };
