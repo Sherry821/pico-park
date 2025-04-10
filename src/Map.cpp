@@ -37,6 +37,7 @@ void Map::RenderMap(const std::vector<std::vector<int>>& matrix){
     LOG_INFO("Rendering map to console:");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     // 設置一些顏色用於不同的地圖元素
     const std::string BLOCK = "█";   // 實心方塊
     const std::string EMPTY = "·";   // 空白區域
@@ -65,6 +66,8 @@ void Map::RenderMap(const std::vector<std::vector<int>>& matrix){
     // LOG_INFO("- Filled Blocks: {}", CountFilledBlocks(matrix));
 =======
 >>>>>>> 3a313fd (git merge --no-ff Sherry821-mapchange)
+=======
+>>>>>>> 7fdaa699bf7b761ecafb95fd44c8ec57d1e973cc
 }
 
 // 輔助函數：計算實心方塊數量
@@ -77,6 +80,7 @@ int Map::CountFilledBlocks(const std::vector<std::vector<int>>& matrix) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 // 在 AppUtil.cpp 中添加
@@ -87,6 +91,16 @@ void App::CreateMapTiles(const std::vector<std::vector<int>>& map){
     // 檢查地圖是否為空
     if (map.empty()){
         LOG_ERROR("Map is empty, cannot create tiles");
+=======
+// 在 AppUtil.cpp 中添加
+void App::CreateMapTiles(const std::vector<std::vector<int>>& map){
+    // 先清除現有的地圖磚塊
+    m_MapTiles.clear();
+
+    // 檢查地圖是否為空
+    if (map.empty()){
+        LOG_ERROR("Map is empty, cannot create tiles?");
+>>>>>>> 7fdaa699bf7b761ecafb95fd44c8ec57d1e973cc
         return;
     }
 
@@ -129,4 +143,7 @@ void App::CreateMapTiles(const std::vector<std::vector<int>>& map){
 
 
 
+<<<<<<< HEAD
 >>>>>>> 3a313fd (git merge --no-ff Sherry821-mapchange)
+=======
+>>>>>>> 7fdaa699bf7b761ecafb95fd44c8ec57d1e973cc
