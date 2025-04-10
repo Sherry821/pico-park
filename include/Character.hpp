@@ -41,6 +41,8 @@ public:
         return originalSize * m_Transform.scale;
     }
 
+    bool CheckTileCollision();
+
 
 
 

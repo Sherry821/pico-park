@@ -42,7 +42,7 @@ bool Character::IsStanding(const std::shared_ptr<Character>& other) const {
     float otherHeadY = pos2.y;
 
     // 1. 垂直方向：A 的腳 ≒ B 的頭
-    bool verticalAligned = myFeetY >= otherHeadY - 10.0f && myFeetY <= otherHeadY + 10.0f;
+    bool verticalAligned = myFeetY >= otherHeadY - 15.0f && myFeetY <= otherHeadY + 15.0f;
 
     // 2. 水平方向：A 的腳範圍要壓在線上 B 的頭部
     bool horizontalAligned =
