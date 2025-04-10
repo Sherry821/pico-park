@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-// Camera.hpp
-=======
->>>>>>> 7fdaa699bf7b761ecafb95fd44c8ec57d1e973cc
 #pragma once
 #include <glm/glm.hpp>
 #include <memory>
@@ -20,11 +16,8 @@ public:
     glm::vec2 CheckBoundaries(const glm::vec2& characterPos, const glm::vec2& characterSize) const;
 
     const glm::vec2& GetPosition() const { return m_Position; }
-<<<<<<< HEAD
-=======
     float GetViewWidth() const { return m_ViewWidth; }
     float GetViewHeight() const { return m_ViewHeight; }
->>>>>>> 7fdaa699bf7b761ecafb95fd44c8ec57d1e973cc
 
 private:
     glm::vec2 m_Position;
@@ -35,8 +28,4 @@ private:
     float m_TopBoundary;
     float m_BottomBoundary;
     float m_SmoothFactor;
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 7fdaa699bf7b761ecafb95fd44c8ec57d1e973cc

@@ -5,6 +5,25 @@
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 
+bool App::CheckTileCollision(glm::vec2 charPos, glm::vec2 charSize, glm::vec2& correctedPos, float& velocityY){
+    for (auto& tile : m_MapTiles) {
+        glm::vec2 tilePos = tile->GetPosition();
+        glm::vec2 tileSize = {55.0f, 55.0f}; // 你的 tile 大小
+
+        bool overlapX = abs(charPos.x - tilePos.x) < (charSize.x + tileSize.x) / 2;
+        bool overlapY = abs(charPos.y - tilePos.y) < (charSize.y + tileSize.y) / 2;
+
+        if (overlapX && overlapY) {
+            if (charPos.y > tilePos.y) {
+                correctedPos.y = tilePos.y + tileSize.y / 2 + charSize.y / 2;
+                velocityY = 0.0f;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 
 void App::Update() {
 
@@ -28,32 +47,31 @@ void App::Update() {
     if (m_Giraffe->IfCollides(m_Chest)) {
         m_Chest->SetVisible(false);  // 隱藏寶箱
     }
+
     // === 🔼 碰撞檢測結束 🔼 ===
 
     // === 🔽 加入角色移動邏輯 🔽 ===
-    //float deltaTime = Util::Time::GetDeltaTime();
-    const float gravity = -20.0f;     // 模擬重力
-    //const float maxJumpHeight = 80.0f;  // 最大跳躍高度
-    //const float jumpForce = 60.0f;   // 跳躍力道
-    const float groundLevel = -150.0f;  // 地面高度 (假設地面 y = 0)
-    const float fallAcceleration = -2.0f; // 下墜加速
+    // 在移動前紀錄舊位置
 
-    //const float deltaTime = 0.016f;  // 每幀時間 (假設每秒 60FPS)
+    const float gravity = -20.0f;     // 模擬重力
+    const float groundLevel = -140.0f;  // 地面高度 (假設地面 y = 0)
 
     // m_pico1 (WAD 控制)
     float speed1 = 5.0f;
-    glm::vec2 newPosition1 = m_pico1->GetPosition();
+    glm::vec2 Position1 = m_pico1->GetPosition();
     float velocityY1 = 0.0f;  // 垂直速度 (用於重力與跳躍)
-    //bool isJumping1 = false; // 標記角色是否正在跳躍
 
     // m_pico2 (上下左右 控制)
     float speed2 = 5.0f;
-    glm::vec2 newPosition2 = m_pico2->GetPosition();
+    glm::vec2 Position2 = m_pico2->GetPosition();
     float velocityY2 = 0.0f;  // 垂直速度 (用於重力與跳躍)
-    //bool isJumping2 = false;
+
+    // 先用舊位置初始化新位置，稍後修改
+    glm::vec2 newPosition1 = Position1;
+    glm::vec2 newPosition2 = Position2;
 
     // ---- m_pico1 移動邏輯 (WAD 控制) ----
-    if (Util::Input::IsKeyPressed(Util::Keycode::W) && newPosition1.y <= groundLevel) {
+    if (Util::Input::IsKeyPressed(Util::Keycode::W) && (newPosition1.y <= groundLevel || m_pico2->IsStanding(m_pico1))) {
         m_pico1 -> Isjumping();
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::A)) {
@@ -63,7 +81,7 @@ void App::Update() {
         newPosition1.x += speed1;  // 右移
     }
     // ---- m_pico2 移動邏輯 (上下左右 控制) ----
-    if (Util::Input::IsKeyPressed(Util::Keycode::UP) && newPosition2.y <= groundLevel) {
+    if (Util::Input::IsKeyPressed(Util::Keycode::UP) && (newPosition2.y <= groundLevel || m_pico1->IsStanding(m_pico2))){
         m_pico2 -> Isjumping();
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
@@ -73,59 +91,6 @@ void App::Update() {
         newPosition2.x += speed2;  // 右移
     }
 
-<<<<<<< HEAD
-// 在 App::Update() 中
-// 使用您實際的 Phase 枚舉值，這裡假設是 STAGE_TWO
-if (m_Phase == Phase::STAGE_THREE) { // 或者您實際使用的階段
-    // 只在特定階段啟用相機跟隨和地圖顯示
-    if (m_Camera && m_pico1 && m_pico2) {
-        // 重要：保存角色的原始世界座標
-        glm::vec2 worldPos1 = m_pico1->GetPosition();
-        glm::vec2 worldPos2 = m_pico2->GetPosition();
-
-        // 打印調試信息
-        std::cout << "Before camera update - Pico1: (" << worldPos1.x << ", " << worldPos1.y
-                  << "), Pico2: (" << worldPos2.x << ", " << worldPos2.y << ")" << std::endl;
-
-        // 更新相機位置
-        m_Camera->Update(m_pico1, m_pico2);
-
-        // 獲取更新後的相機位置
-        glm::vec2 cameraPos = m_Camera->GetPosition();
-        std::cout << "Camera position: (" << cameraPos.x << ", " << cameraPos.y << ")" << std::endl;
-
-        // 更新地圖磚塊的位置（如果有地圖管理器）
-        if (m_MapManager) {
-            // 顯示所有地圖磚塊
-            for (auto& tile : m_MapManager->GetMapTiles()) {
-                tile->SetVisible(true);
-
-                // 獲取磚塊的世界座標
-                glm::vec2 tileWorldPos = tile->GetPosition();
-
-                // 轉換為螢幕座標
-                glm::vec2 tileScreenPos = m_Camera->WorldToScreenPosition(tileWorldPos);
-
-                // 更新磚塊位置
-                tile->SetPosition(tileScreenPos);
-            }
-        }
-
-        // 將角色位置轉換為螢幕座標
-        glm::vec2 screenPos1 = m_Camera->WorldToScreenPosition(worldPos1);
-        glm::vec2 screenPos2 = m_Camera->WorldToScreenPosition(worldPos2);
-
-        // 打印調試信息
-        std::cout << "After camera transform - Pico1 screen: (" << screenPos1.x << ", " << screenPos1.y
-                  << "), Pico2 screen: (" << screenPos2.x << ", " << screenPos2.y << ")" << std::endl;
-
-        // 更新角色位置
-        m_pico1->SetPosition(screenPos1);
-        m_pico2->SetPosition(screenPos2);
-    }
-} else {
-    // 在其他階段隱藏地圖
-=======
     m_Camera->Update(m_pico1, m_pico2);
 
     // 相機跟隨與角色互動部分
@@ -207,6 +172,8 @@ if (m_Phase == Phase::STAGE_THREE) {  // 只在 Phase::STAGE_THREE 階段啟用�
         mapBottom = -223.0f;
     }
 
+
+
     // For m_pico1 movement - add after updating newPosition1
     float width1 = 20.0f; // Approximate character width, adjust based on actual sprite
     float height1 = 40.0f; // Approximate character height, adjust based on actual sprite
@@ -270,6 +237,18 @@ if (m_Phase == Phase::STAGE_THREE) {  // 只在 Phase::STAGE_THREE 階段啟用�
     m_pico1->SetPosition(screenPos1);
     m_pico2->SetPosition(screenPos2);
 
+    glm::vec2 pico1Size = m_pico1->GetScaledSize();
+    glm::vec2 pico2Size = m_pico2->GetScaledSize();
+
+    glm::vec2 correctedWorld1 = worldPos1;
+    if (CheckTileCollision(newPosition1, pico1Size, correctedWorld1, velocityY1)) {
+        newPosition1 = correctedWorld1;
+    }
+    glm::vec2 correctedPos2 = worldPos2;
+    if (CheckTileCollision(newPosition2, pico2Size, correctedPos2, velocityY2)) {
+        newPosition2 = correctedPos2;
+    }
+
     // 更新地圖磚塊的位置
     if (m_MapManager) {
         for (auto& tile : m_MapManager->GetMapTiles()) {
@@ -285,7 +264,6 @@ if (m_Phase == Phase::STAGE_THREE) {  // 只在 Phase::STAGE_THREE 階段啟用�
     }
 } else {
     // 在其他階段，隱藏地圖磚塊
->>>>>>> 7fdaa699bf7b761ecafb95fd44c8ec57d1e973cc
     if (m_MapManager) {
         for (auto& tile : m_MapManager->GetMapTiles()) {
             tile->SetVisible(false);
@@ -293,31 +271,11 @@ if (m_Phase == Phase::STAGE_THREE) {  // 只在 Phase::STAGE_THREE 階段啟用�
     }
 }
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 7fdaa699bf7b761ecafb95fd44c8ec57d1e973cc
     // ---- 重力與跳躍的更新邏輯 ----
-    // if (isJumping1) {
-    //     velocityY1 += gravity*0.2f;
-    //     newPosition1.y += velocityY1;
-    //     if (newPosition1.y - groundLevel >= maxJumpHeight) {
-    //         velocityY1 = fallAcceleration; // 達到最大高度後，開始下墜
-    //     }
-    // }
-    velocityY1 += gravity*0.2f;
+
+    velocityY1 += gravity * 0.2f;
     newPosition1.y += velocityY1;
 
-    // if (isJumping2) {
-    //     //LOG_DEBUG("IS JUMPING.");
-    //     velocityY2 += gravity*0.2f; // 平滑減速上升
-    //     newPosition2.y += velocityY2;
-    //     if (newPosition2.y - groundLevel >= maxJumpHeight) {
-    //         velocityY2 = fallAcceleration; // 達到最大高度後，開始下墜
-    //     }
-    // }
     velocityY2 += gravity * 0.2f;
     newPosition2.y += velocityY2;
 
@@ -326,14 +284,35 @@ if (m_Phase == Phase::STAGE_THREE) {  // 只在 Phase::STAGE_THREE 階段啟用�
         newPosition1.y = groundLevel;
         velocityY1 = 0.0f;
     }
-
     if (newPosition2.y < groundLevel) {
         newPosition2.y = groundLevel;
         velocityY2 = 0.0f;
     }
+
+    glm::vec2 deltaPosition2 = newPosition2 - Position2;
+    glm::vec2 deltaPosition1 = newPosition1 - Position1;
+
+    // 檢查角色是否站立在對方上並調整位置與速度
+    if (m_pico1->IsStanding(m_pico2)) {
+        glm::vec2 pico2Pos = m_pico2->GetPosition();
+        glm::vec2 pico1Size = m_pico1->GetScaledSize();
+        newPosition2.y = pico2Pos.y - pico1Size.y;
+        newPosition2.y = pico2Pos.y;
+        newPosition2 += deltaPosition1;
+    }
+
+    if (m_pico2->IsStanding(m_pico1)) {
+        glm::vec2 pico1Pos = m_pico1->GetPosition();
+        glm::vec2 pico2Size = m_pico2->GetScaledSize();
+        newPosition1.y = pico1Pos.y - pico2Size.y;
+        newPosition1.y = pico1Pos.y;
+        newPosition1 += deltaPosition2;
+    }
+
     // 設定角色新位置
     m_pico1->SetPosition(newPosition1);
     m_pico2->SetPosition(newPosition2);
+
 
     // === 🔼 角色移動邏輯結束 🔼 ===
 
