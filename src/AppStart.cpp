@@ -8,6 +8,8 @@
 void App::Start() {
     LOG_TRACE("Start");
 
+    m_Camera = std::make_unique<Camera>(800.0f, 600.0f);
+
     // 玩家 1（PICO1）
     m_pico1 = std::make_shared<Character>(GA_RESOURCE_DIR"/Image/Character/pico_stand1.png");
     m_pico1->m_Transform.translation = {-100.0f, -155.5f};
@@ -37,6 +39,7 @@ void App::Start() {
     m_Chest->SetVisible(false);
     m_Root.AddChild(m_Chest);
 
+<<<<<<< HEAD
     m_Camera = std::make_unique<Camera>(800.0f, 600.0f); // 假設視窗大小為 800x600
     m_MapManager = std::make_unique<MapManager>(m_Root);
 
@@ -59,6 +62,29 @@ void App::Start() {
         LOG_INFO("Map loaded successfully. Rows: {}", m_Map.size());
     }
 
+=======
+    m_MapManager = std::make_unique<MapManager>(m_Root);
+
+    std::string mapPath = GA_RESOURCE_DIR"/Map/first.txt";
+    m_MapManager->LoadMap(mapPath);
+
+    // 設置相機邊界
+    float left = -387.0f;
+    float right = 387.0f;
+    float top = 223.0f;
+    float bottom = -223.0f;
+    m_Camera->SetBoundaries(left, right, top, bottom);
+
+    for (auto& tile : m_MapManager->GetMapTiles()) {
+        tile->SetVisible(false);
+    }
+
+    if (m_MapManager->GetMapTiles().empty()) {
+        LOG_ERROR("Map loading failed. Please check the file path and permissions.");
+    } else {
+        LOG_INFO("Map loaded successfully. Tiles: {}", m_MapManager->GetMapTiles().size());
+    }
+>>>>>>> 7fdaa699bf7b761ecafb95fd44c8ec57d1e973cc
     std::vector<std::string> beeImages;
     beeImages.reserve(2);
     for (int i = 0; i < 2; ++i) {
