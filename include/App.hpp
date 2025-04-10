@@ -25,11 +25,11 @@ public:
 
     void End(); // NOLINT(readability-convert-member-functions-to-static)
 
-private:
-    void ValidTask();
     void CreateMapTiles(const std::vector<std::vector<int>>& map);
 
 private:
+    void ValidTask();
+
     enum class Phase {
         Welcome,
         PICK_STAGE,

@@ -16,7 +16,6 @@ std::vector<std::vector<int>> Map::LoadMap(const std::string& filename) {
 
     if (!file.is_open()) {
         LOG_ERROR("Failed to open map file: {}", filename);
-        LOG_ERROR("Failed to open map file: {}", filename);
         return matrix;
     }
 
@@ -33,7 +32,6 @@ std::vector<std::vector<int>> Map::LoadMap(const std::string& filename) {
         }
     }
 
-    LOG_INFO("Loaded map with {} rows", matrix.size());
     LOG_INFO("Loaded map with {} rows", matrix.size());
     return matrix;
 }
@@ -78,22 +76,4 @@ int Map::CountFilledBlocks(const std::vector<std::vector<int>>& matrix) {
     return count;
 }
 
-void Map::RenderMapToFile(const std::vector<std::vector<int>>& matrix, const std::string& outputFile) {
-    std::ofstream file(outputFile);
-
-    if (!file.is_open()) {
-        LOG_ERROR("Failed to open output file for map rendering");
-        return;
-    }
-
-    for (const auto& row : matrix) {
-        for (int cell : row) {
-            file << cell << " ";
-        }
-        file << "\n";
-    }
-
-    file.close();
-    LOG_INFO("Map rendered to {}", outputFile);
-}
 

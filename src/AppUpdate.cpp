@@ -71,24 +71,24 @@ void App::Update() {
     }
 
     // ---- 重力與跳躍的更新邏輯 ----
-    if (isJumping1) {
-        velocityY1 += gravity*0.2f;
-        newPosition1.y += velocityY1;
-        if (newPosition1.y - groundLevel >= maxJumpHeight) {
-            velocityY1 = fallAcceleration; // 達到最大高度後，開始下墜
-        }
-    }
+    // if (isJumping1) {
+    //     velocityY1 += gravity*0.2f;
+    //     newPosition1.y += velocityY1;
+    //     if (newPosition1.y - groundLevel >= maxJumpHeight) {
+    //         velocityY1 = fallAcceleration; // 達到最大高度後，開始下墜
+    //     }
+    // }
     velocityY1 += gravity*0.2f;
     newPosition1.y += velocityY1;
 
-    if (isJumping2) {
-        //LOG_DEBUG("IS JUMPING.");
-        velocityY2 += gravity*0.2f; // 平滑減速上升
-        newPosition2.y += velocityY2;
-        if (newPosition2.y - groundLevel >= maxJumpHeight) {
-            velocityY2 = fallAcceleration; // 達到最大高度後，開始下墜
-        }
-    }
+    // if (isJumping2) {
+    //     //LOG_DEBUG("IS JUMPING.");
+    //     velocityY2 += gravity*0.2f; // 平滑減速上升
+    //     newPosition2.y += velocityY2;
+    //     if (newPosition2.y - groundLevel >= maxJumpHeight) {
+    //         velocityY2 = fallAcceleration; // 達到最大高度後，開始下墜
+    //     }
+    // }
     velocityY2 += gravity * 0.2f;
     newPosition2.y += velocityY2;
 
