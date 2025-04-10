@@ -75,6 +75,7 @@ private:
 
 
     bool m_EnterDown = false;
+    bool m_IsCharacterOutOfBounds = false;
 };
 
 #endif
