@@ -34,9 +34,9 @@ void Character::Ismoving() {
 
 bool Character::IsStanding(const std::shared_ptr<Character>& other) const {
     glm::vec2 pos1 = this->GetPosition();
-    glm::vec2 pos1_size = this->GetScaledSize();     // 用這個來抓寬高
+    glm::vec2 pos1_size = this->GetSize();   // 用這個來抓寬高
     glm::vec2 pos2 = other->GetPosition();
-    glm::vec2 pos2_size = other->GetScaledSize(); // 抓 B 的寬高
+    glm::vec2 pos2_size = other->GetSize(); // 抓 B 的寬高
 
     float myFeetY = pos1.y + pos1_size.y;
     float otherHeadY = pos2.y;

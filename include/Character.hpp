@@ -23,6 +23,8 @@ public:
 
     [[nodiscard]] bool GetVisibility() const { return m_Visible; }
 
+    [[nodiscard]] glm::vec2 GetSize() const { return Cha_size; }
+
     void Isjumping();
 
     void Ismoving();
@@ -50,6 +52,7 @@ private:
     void ResetPosition() { m_Transform.translation = {0, 0}; }
     int JumpVelocity = 0;
     std::string m_ImagePath;
+    glm::vec2 Cha_size = {50, 50};
 };
 
 
