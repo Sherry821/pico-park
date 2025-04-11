@@ -94,6 +94,3 @@ void App::CreateMapTiles(const std::vector<std::vector<int>>& map){
 
     LOG_INFO("Total Tiles Created: {}", tilesCreated);
 }
-
-
-

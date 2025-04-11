@@ -29,12 +29,12 @@ public:
 
     void CreateMapTiles(const std::vector<std::vector<int>>& map);
 
+    bool CheckTileCollision(glm::vec2 charPos, glm::vec2 charSize, glm::vec2& correctedPos, float& velocityY);
+
+
 private:
     void ValidTask();
 
-
-
-private:
     enum class Phase {
         Welcome,
         PICK_STAGE,

@@ -91,7 +91,7 @@ void Camera::SetBoundaries(float left, float right, float top, float bottom) {
     m_RightBoundary = right;
     m_TopBoundary = top;
     m_BottomBoundary = bottom;
-    
+
     LOG_INFO("Camera boundaries set to: L={}, R={}, T={}, B={}", left, right, top, bottom);
 }
 
@@ -107,14 +107,14 @@ glm::vec2 Camera::ScreenToWorldPosition(const glm::vec2& screenPos) const {
 
 glm::vec2 Camera::CheckBoundaries(const glm::vec2& characterPos, const glm::vec2& characterSize) const {
     glm::vec2 newPos = characterPos;
-    
+
     // 檢查並修正角色位置，確保不會超出地圖邊界
     float halfWidth = characterSize.x * 0.5f;
     float halfHeight = characterSize.y * 0.5f;
-    
+
     newPos.x = std::clamp(newPos.x, m_LeftBoundary + halfWidth, m_RightBoundary - halfWidth);
     newPos.y = std::clamp(newPos.y, m_BottomBoundary + halfHeight, m_TopBoundary - halfHeight);
-    
+
     return newPos;
 }
 
