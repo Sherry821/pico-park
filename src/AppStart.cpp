@@ -1,9 +1,14 @@
 #include "App.hpp"
+#include "Camera.hpp"
 #include "./Util/GameObject.hpp"
 #include "Util/Logger.hpp"
+#include "Map.hpp"
+#include "MapManager.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");
+
+    m_Camera = std::make_unique<Camera>(800.0f, 600.0f);
 
     // 玩家 1（PICO1）
     m_pico1 = std::make_shared<Character>(GA_RESOURCE_DIR"/Image/Character/pico_stand1.png");
@@ -18,7 +23,7 @@ void App::Start() {
     m_pico2->m_Transform.translation = {50.0f, -140.5f};
     m_pico2->SetZIndex(50);
     m_pico2->SetVisible(false);
-    m_pico2->m_Transform.scale = glm::vec2(0.25f, 0.25f);  // 放大 0.25 倍
+    m_pico2->m_Transform.scale = glm::vec2(0.5f, 0.5f);  // 放大 0.5 倍
     m_Root.AddChild(m_pico2);
 
     m_Giraffe = std::make_shared<Character>(GA_RESOURCE_DIR"/Image/Character/giraffe.png");
@@ -30,10 +35,31 @@ void App::Start() {
 
     m_Chest = std::make_shared<Character>(GA_RESOURCE_DIR"/Image/Character/chest.png");
     m_Chest->SetZIndex(5);
-    m_Chest->SetPosition({197.5f, -20.5f});
+    m_Chest->SetPosition({197.5f, -3.5f});
     m_Chest->SetVisible(false);
     m_Root.AddChild(m_Chest);
 
+    m_MapManager = std::make_unique<MapManager>(m_Root);
+
+    std::string mapPath = GA_RESOURCE_DIR"/Map/first.txt";
+    m_MapManager->LoadMap(mapPath);
+
+    // 設置相機邊界
+    float left = -275.0f;
+    float right = 275.0f;
+    float top = 223.0f;
+    float bottom = -223.0f;
+    m_Camera->SetBoundaries(left, right, top, bottom);
+
+    for (auto& tile : m_MapManager->GetMapTiles()) {
+        tile->SetVisible(false);
+    }
+
+    if (m_MapManager->GetMapTiles().empty()) {
+        LOG_ERROR("Map loading failed. Please check the file path and permissions.");
+    } else {
+        LOG_INFO("Map loaded successfully. Tiles: {}", m_MapManager->GetMapTiles().size());
+    }
     std::vector<std::string> beeImages;
     beeImages.reserve(2);
     for (int i = 0; i < 2; ++i) {
@@ -57,7 +83,6 @@ void App::Start() {
 
     m_PRM = std::make_shared<PhaseResourceManger>();
     m_Root.AddChildren(m_PRM->GetChildren());
-
 
     m_CurrentState = State::UPDATE;
 }

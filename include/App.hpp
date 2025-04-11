@@ -8,6 +8,8 @@
 #include "Util/Text.hpp"
 #include "PhaseResourceManger.hpp"
 #include "AnimatedCharacter.hpp"
+#include "Camera.hpp"
+#include "MapManager.hpp"
 
 class App {
 public:
@@ -25,17 +27,21 @@ public:
 
     void End(); // NOLINT(readability-convert-member-functions-to-static)
 
+    void CreateMapTiles(const std::vector<std::vector<int>>& map);
+
+    bool CheckTileCollision(glm::vec2 charPos, glm::vec2 charSize, glm::vec2& correctedPos, float& velocityY);
+
+
 private:
     void ValidTask();
 
-private:
     enum class Phase {
         Welcome,
         PICK_STAGE,
         STAGE_ONE,
         // STAGE_TWO,
-        // STAGE_THREE,
-        // STAGE_FOUR,
+        STAGE_THREE,
+         STAGE_FOUR,
         //CHANGE_CHARACTER_IMAGE,
         //ABLE_TO_MOVE,
         //COLLIDE_DETECTION,
@@ -44,11 +50,13 @@ private:
         COUNTDOWN,
     };
 
-
     State m_CurrentState = State::START;
     Phase m_Phase = Phase::Welcome;
 
     Util::Renderer m_Root;
+
+    std::vector<std::vector<int>> m_Map;
+    std::vector<std::shared_ptr<Character>> m_MapTiles;
 
     std::shared_ptr<Character> m_pico1;
     std::shared_ptr<Character> m_pico2;
@@ -62,7 +70,12 @@ private:
 
     std::shared_ptr<PhaseResourceManger> m_PRM;
 
+    std::unique_ptr<Camera> m_Camera;
+    std::unique_ptr<MapManager> m_MapManager;
+
+
     bool m_EnterDown = false;
+    bool m_IsCharacterOutOfBounds = false;
 };
 
 #endif
