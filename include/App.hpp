@@ -41,7 +41,7 @@ private:
         STAGE_ONE,
         // STAGE_TWO,
         STAGE_THREE,
-         STAGE_FOUR,
+        STAGE_FOUR,
         //CHANGE_CHARACTER_IMAGE,
         //ABLE_TO_MOVE,
         //COLLIDE_DETECTION,
@@ -60,6 +60,10 @@ private:
 
     std::shared_ptr<Character> m_pico1;
     std::shared_ptr<Character> m_pico2;
+
+    std::shared_ptr<Character> m_key;
+    std::shared_ptr<Character> m_door1;
+    std::shared_ptr<Character> m_door2;
 
     std::shared_ptr<Character> m_Giraffe;
     std::shared_ptr<Character> m_Chest;
