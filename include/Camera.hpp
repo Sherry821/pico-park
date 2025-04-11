@@ -10,6 +10,8 @@ public:
 
     void Update(const std::shared_ptr<Character>& pico1, const std::shared_ptr<Character>& pico2);
     void SetBoundaries(float left, float right, float top, float bottom);
+    bool IsCharacterOutOfBounds(const std::shared_ptr<Character>& character) const;
+    void ForceCharactersInView(const std::shared_ptr<Character>& pico1, const std::shared_ptr<Character>& pico2);
 
     glm::vec2 WorldToScreenPosition(const glm::vec2& worldPos) const;
     glm::vec2 ScreenToWorldPosition(const glm::vec2& screenPos) const;

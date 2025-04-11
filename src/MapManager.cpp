@@ -59,23 +59,29 @@ void MapManager::CreateMapTiles(const std::vector<std::vector<int>>& map) {
     LOG_INFO("Created {} map tiles", tilesCreated);
 }
 
+// In MapManager.cpp - add or update the UpdateVisibility method
 void MapManager::UpdateVisibility(const Camera& camera) {
-    // 獲取相機位置
-    glm::vec2 cameraPos = camera.GetPosition();
-    float halfViewWidth = 800.0f / 2.0f;  // 假設視窗寬度為800
-    float halfViewHeight = 600.0f / 2.0f; // 假設視窗高度為600
+    // Get camera view dimensions
+    float viewWidth = camera.GetViewWidth();
+    float viewHeight = camera.GetViewHeight();
 
-    // 更新每個磚塊的可見性
+    // Get camera position
+    glm::vec2 cameraPos = camera.GetPosition();
+
+    // Update each tile's visibility
     for (const auto& tile : m_MapTiles) {
         glm::vec2 tilePos = tile->GetPosition();
 
-        // 計算磚塊在螢幕上的位置
+        // Calculate tile's screen position relative to camera
         glm::vec2 screenPos = camera.WorldToScreenPosition(tilePos);
 
-        // 如果磚塊在視野範圍內，則顯示，否則隱藏
-        bool isVisible = (std::abs(screenPos.x) < halfViewWidth + m_TileSize &&
-                         std::abs(screenPos.y) < halfViewHeight + m_TileSize);
+        // Check if tile is within view (with some margin)
+        float margin = m_TileSize;
+        bool isVisible = (std::abs(screenPos.x) < viewWidth * 0.5f + margin &&
+                          std::abs(screenPos.y) < viewHeight * 0.5f + margin);
 
+        // Update tile position and visibility
+        tile->SetPosition(screenPos);
         tile->SetVisible(isVisible);
     }
 }

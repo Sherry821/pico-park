@@ -94,85 +94,58 @@ void App::Update() {
     m_Camera->Update(m_pico1, m_pico2);
 
     // 相機跟隨與角色互動部分
-if (m_Phase == Phase::STAGE_THREE) {  // 只在 Phase::STAGE_THREE 階段啟用相機跟隨和地圖顯示
-    // 如果是第一次進入此階段，初始化地圖和顯示設置
-    static bool isFirstEnterPhase3 = true;
-    if (isFirstEnterPhase3) {
-        // 顯示所有地圖磚塊
+// In AppUpdate.cpp - replace or modify the existing camera follow code
+if (m_Phase == Phase::STAGE_THREE) {
+    // Make sure map tiles are visible in this phase
+    static bool firstTimeInPhase3 = true;
+    if (firstTimeInPhase3) {
         for (auto& tile : m_MapManager->GetMapTiles()) {
             tile->SetVisible(true);
         }
-
-        // 重置角色位置到適當的起始點
-        m_pico1->SetPosition({-100.0f, -140.5f});
-        m_pico2->SetPosition({50.0f, -140.5f});
-
-        isFirstEnterPhase3 = false;
+        m_pico1->SetVisible(true);
+        m_pico2->SetVisible(true);
+        firstTimeInPhase3 = false;
     }
 
-    // 儲存角色的世界座標
-    static glm::vec2 worldPos1(0.0f, 0.0f);
-    static glm::vec2 worldPos2(0.0f, 0.0f);
-    static bool firstRun = true;
+    // Update character positions based on input
+    glm::vec2 newPosition1 = m_pico1->GetPosition();
+    glm::vec2 newPosition2 = m_pico2->GetPosition();
 
-    if (firstRun) {
-        // 第一次運行時初始化世界座標
-        worldPos1 = m_pico1->GetPosition();
-        worldPos2 = m_pico2->GetPosition();
-        firstRun = false;
+    // Handle character 1 movement
+    if (Util::Input::IsKeyPressed(Util::Keycode::A)) {
+        newPosition1.x -= 5.0f;
     }
-
-    // 處理角色移動（使用世界座標）
-    float moveX1 = 0.0f, moveY1 = 0.0f;
-    float moveX2 = 0.0f, moveY2 = 0.0f;
-
-    // Pico1 移動控制 (WAD)
-    if (Util::Input::IsKeyDown(Util::Keycode::W)) {
-        moveY1 += 5.0f;
-    }
-    if (Util::Input::IsKeyDown(Util::Keycode::S)) {
-        moveY1 -= 5.0f;
-    }
-    if (Util::Input::IsKeyDown(Util::Keycode::A)) {
-        moveX1 -= 5.0f;
-    }
-    if (Util::Input::IsKeyDown(Util::Keycode::D)) {
-        moveX1 += 5.0f;
+    if (Util::Input::IsKeyPressed(Util::Keycode::D)) {
+        newPosition1.x += 5.0f;
     }
 
-    // Pico2 移動控制 (方向鍵)
-    if (Util::Input::IsKeyDown(Util::Keycode::UP)) {
-        moveY2 += 5.0f;
+    // Handle character 2 movement
+    if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
+        newPosition2.x -= 5.0f;
     }
-    if (Util::Input::IsKeyDown(Util::Keycode::DOWN)) {
-        moveY2 -= 5.0f;
-    }
-    if (Util::Input::IsKeyDown(Util::Keycode::LEFT)) {
-        moveX2 -= 5.0f;
-    }
-    if (Util::Input::IsKeyDown(Util::Keycode::RIGHT)) {
-        moveX2 += 5.0f;
+    if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
+        newPosition2.x += 5.0f;
     }
 
-    // 計算新的世界座標
-    glm::vec2 newWorldPos1 = worldPos1 + glm::vec2(moveX1, moveY1);
-    glm::vec2 newWorldPos2 = worldPos2 + glm::vec2(moveX2, moveY2);
-
-    // Add this where character movement is handled in AppUpdate.cpp
-
-    // Get map boundaries for collision detection
+    // Apply character movement with boundary checks
     float mapLeft, mapRight, mapTop, mapBottom;
-    if (m_MapManager) {
-        m_MapManager->GetMapBoundaries(mapLeft, mapRight, mapTop, mapBottom);
-    } else {
-        // Default values if map manager isn't available
-        mapLeft = -387.0f;
-        mapRight = 387.0f;
-        mapTop = 223.0f;
-        mapBottom = -223.0f;
-    }
+    m_MapManager->GetMapBoundaries(mapLeft, mapRight, mapTop, mapBottom);
 
+    // Apply boundary constraints for character 1
+    float width1 = 25.0f;  // Approximate width
+    float height1 = 50.0f; // Approximate height
+    newPosition1.x = glm::clamp(newPosition1.x, mapLeft + width1 * 0.5f, mapRight - width1 * 0.5f);
+    newPosition1.y = glm::clamp(newPosition1.y, mapBottom + height1 * 0.5f, mapTop - height1 * 0.5f);
 
+    // Apply boundary constraints for character 2
+    float width2 = 25.0f;
+    float height2 = 50.0f;
+    newPosition2.x = glm::clamp(newPosition2.x, mapLeft + width2 * 0.5f, mapRight - width2 * 0.5f);
+    newPosition2.y = glm::clamp(newPosition2.y, mapBottom + height2 * 0.5f, mapTop - height2 * 0.5f);
+
+    // Update character positions
+    m_pico1->SetPosition(newPosition1);
+    m_pico2->SetPosition(newPosition2);
 
     // For m_pico1 movement - add after updating newPosition1
     float width1 = 20.0f; // Approximate character width, adjust based on actual sprite
@@ -191,62 +164,72 @@ if (m_Phase == Phase::STAGE_THREE) {  // 只在 Phase::STAGE_THREE 階段啟用�
         newPosition1.y = mapBottom + height1/2;
     }
 
-    // For m_pico2 movement - add after updating newPosition2
-    float width2 = 25.0f; // Might be different size from pico1
-    float height2 = 50.0f; // Might be different size from pico1
-    // Apply character boundary constraints
-    if (newPosition2.x - width2/2 < mapLeft) {
-        newPosition2.x = mapLeft + width2/2;
-    }
-    if (newPosition2.x + width2/2 > mapRight) {
-        newPosition2.x = mapRight - width2/2;
-    }
-    if (newPosition2.y + height2/2 > mapTop) {
-        newPosition2.y = mapTop - height2/2;
-    }
-    if (newPosition2.y - height2/2 < mapBottom) {
-        newPosition2.y = mapBottom + height2/2;
-    }
-
-    // 確保角色不會分開太遠
-    float maxDistance = 400.0f; // 最大允許距離
-    glm::vec2 diff = newWorldPos2 - newWorldPos1;
-    float distance = glm::length(diff);
-
-    if (distance > maxDistance) {
-        // 將兩個角色都拉近到允許的最大距離
-        glm::vec2 direction = glm::normalize(diff);
-        glm::vec2 center = (newWorldPos1 + newWorldPos2) * 0.5f;
-
-        newWorldPos1 = center - direction * maxDistance * 0.5f;
-        newWorldPos2 = center + direction * maxDistance * 0.5f;
-    }
-
-    // 更新世界座標
-    worldPos1 = newWorldPos1;
-    worldPos2 = newWorldPos2;
-
-    // 更新相機
+    // Update camera to follow characters
     m_Camera->Update(m_pico1, m_pico2);
 
-    // 將世界座標轉換為螢幕座標
-    glm::vec2 screenPos1 = m_Camera->WorldToScreenPosition(worldPos1);
-    glm::vec2 screenPos2 = m_Camera->WorldToScreenPosition(worldPos2);
+    // Update map tiles based on camera position
+    for (auto& tile : m_MapManager->GetMapTiles()) {
+        glm::vec2 worldPos = tile->GetPosition();
+        glm::vec2 screenPos = m_Camera->WorldToScreenPosition(worldPos);
+        tile->SetPosition(screenPos);
 
-    // 更新角色的螢幕位置
-    m_pico1->SetPosition(screenPos1);
-    m_pico2->SetPosition(screenPos2);
-
-    glm::vec2 pico1Size = m_pico1->GetScaledSize();
-    glm::vec2 pico2Size = m_pico2->GetScaledSize();
-
-    glm::vec2 correctedWorld1 = worldPos1;
-    if (CheckTileCollision(newPosition1, pico1Size, correctedWorld1, velocityY1)) {
-        newPosition1 = correctedWorld1;
+        // Only show tiles that are within the camera view (with some margin)
+        float margin = 100.0f;
+        bool isVisible = (std::abs(screenPos.x) < m_Camera->GetViewWidth() * 0.5f + margin &&
+                          std::abs(screenPos.y) < m_Camera->GetViewHeight() * 0.5f + margin);
+        tile->SetVisible(isVisible);
     }
-    glm::vec2 correctedPos2 = worldPos2;
-    if (CheckTileCollision(newPosition2, pico2Size, correctedPos2, velocityY2)) {
-        newPosition2 = correctedPos2;
+}
+
+    // In AppUpdate.cpp - Add this in the Update method where character movement is handled
+
+// Check if characters are out of bounds and output a signal
+bool pico1OutOfBounds = m_Camera->IsCharacterOutOfBounds(m_pico1);
+bool pico2OutOfBounds = m_Camera->IsCharacterOutOfBounds(m_pico2);
+
+if (pico1OutOfBounds) {
+    LOG_DEBUG("Pico1 is out of bounds! Position: ({}, {})",
+                m_pico1->GetPosition().x, m_pico1->GetPosition().y);
+}
+
+if (pico2OutOfBounds) {
+    LOG_DEBUG("Pico2 is out of bounds! Position: ({}, {})",
+                m_pico2->GetPosition().x, m_pico2->GetPosition().y);
+}
+
+// If either character is out of bounds, set a visual indicator or play a sound
+if (pico1OutOfBounds || pico2OutOfBounds) {
+    // You could add a visual indicator here, like changing character color
+    // Or set a flag to be used elsewhere in your code
+    m_IsCharacterOutOfBounds = true;
+
+    // You could also force characters to stay within bounds
+    if (pico1OutOfBounds) {
+        // Adjust pico1's position to keep in bounds
+        glm::vec2 pos = m_pico1->GetPosition();
+        glm::vec2 screenPos = m_Camera->WorldToScreenPosition(pos);
+
+        // Calculate the adjustment needed
+        float halfWidth = m_Camera->GetViewWidth() * 0.5f;
+        float halfHeight = m_Camera->GetViewHeight() * 0.5f;
+
+        if (screenPos.x < -halfWidth) screenPos.x = -halfWidth;
+        if (screenPos.x > halfWidth) screenPos.x = halfWidth;
+        if (screenPos.y < -halfHeight) screenPos.y = -halfHeight;
+        if (screenPos.y > halfHeight) screenPos.y = halfHeight;
+
+        // Convert back to world position and set
+        m_pico1->SetPosition(m_Camera->ScreenToWorldPosition(screenPos));
+      glm::vec2 pico1Size = m_pico1->GetScaledSize();
+      glm::vec2 pico2Size = m_pico2->GetScaledSize();
+
+      glm::vec2 correctedWorld1 = worldPos1;
+      if (CheckTileCollision(newPosition1, pico1Size, correctedWorld1, velocityY1)) {
+          newPosition1 = correctedWorld1;
+      }
+      glm::vec2 correctedPos2 = worldPos2;
+      if (CheckTileCollision(newPosition2, pico2Size, correctedPos2, velocityY2)) {
+          newPosition2 = correctedPos2;
     }
 
     // 更新地圖磚塊的位置
@@ -262,13 +245,24 @@ if (m_Phase == Phase::STAGE_THREE) {  // 只在 Phase::STAGE_THREE 階段啟用�
             tile->SetVisible(isVisible);
         }
     }
-} else {
-    // 在其他階段，隱藏地圖磚塊
-    if (m_MapManager) {
-        for (auto& tile : m_MapManager->GetMapTiles()) {
-            tile->SetVisible(false);
-        }
+
+    if (pico2OutOfBounds) {
+        // Similar adjustment for pico2
+        glm::vec2 pos = m_pico2->GetPosition();
+        glm::vec2 screenPos = m_Camera->WorldToScreenPosition(pos);
+
+        float halfWidth = m_Camera->GetViewWidth() * 0.5f;
+        float halfHeight = m_Camera->GetViewHeight() * 0.5f;
+
+        if (screenPos.x < -halfWidth) screenPos.x = -halfWidth;
+        if (screenPos.x > halfWidth) screenPos.x = halfWidth;
+        if (screenPos.y < -halfHeight) screenPos.y = -halfHeight;
+        if (screenPos.y > halfHeight) screenPos.y = halfHeight;
+
+        m_pico2->SetPosition(m_Camera->ScreenToWorldPosition(screenPos));
     }
+} else {
+    m_IsCharacterOutOfBounds = false;
 }
 
     // ---- 重力與跳躍的更新邏輯 ----

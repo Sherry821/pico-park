@@ -45,8 +45,8 @@ void App::Start() {
     m_MapManager->LoadMap(mapPath);
 
     // 設置相機邊界
-    float left = -387.0f;
-    float right = 387.0f;
+    float left = -275.0f;
+    float right = 275.0f;
     float top = 223.0f;
     float bottom = -223.0f;
     m_Camera->SetBoundaries(left, right, top, bottom);
