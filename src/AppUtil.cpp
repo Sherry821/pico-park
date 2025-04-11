@@ -47,9 +47,9 @@ void App::ValidTask() {
 
         case Phase::STAGE_ONE:
             m_Phase = Phase::BEE_ANIMATION;
-        m_Giraffe->SetVisible(false);
-        m_Bee->SetVisible(true);
-        m_PRM->NextPhase();
+            m_Giraffe->SetVisible(false);
+            m_Bee->SetVisible(true);
+            m_PRM->NextPhase();
         break;
 
         case Phase::BEE_ANIMATION:
@@ -65,8 +65,8 @@ void App::ValidTask() {
                 tile->SetVisible(true);
                 }
                 // 重置角色位置到適當的起始點
-                m_pico1->SetPosition({-100.0f, -140.5f});
-                m_pico2->SetPosition({50.0f, -140.5f});
+                m_pico1->SetPosition({-100.0f, -155.5f});
+                m_pico2->SetPosition({50.0f, -155.5f});
                 m_pico1->SetVisible(true);
                 m_pico2->SetVisible(true);
 

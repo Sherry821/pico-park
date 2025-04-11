@@ -23,7 +23,7 @@ void App::Start() {
     m_pico2->m_Transform.translation = {50.0f, -155.5f};
     m_pico2->SetZIndex(50);
     m_pico2->SetVisible(false);
-    m_pico2->m_Transform.scale = glm::vec2(0.25f, 0.25f);  // 放大 0.5 倍
+    m_pico2->m_Transform.scale = glm::vec2(0.25f, 0.25f);  // 放大 0.25 倍
     m_Root.AddChild(m_pico2);
 
     m_Giraffe = std::make_shared<Character>(GA_RESOURCE_DIR"/Image/Character/giraffe.png");
@@ -32,12 +32,17 @@ void App::Start() {
     m_Giraffe->SetZIndex(50);
     m_Root.AddChild(m_Giraffe);
 
-
     m_Chest = std::make_shared<Character>(GA_RESOURCE_DIR"/Image/Character/chest.png");
     m_Chest->SetZIndex(5);
     m_Chest->SetPosition({197.5f, -3.5f});
     m_Chest->SetVisible(false);
     m_Root.AddChild(m_Chest);
+
+    m_key = std::make_shared<Character>(GA_RESOURCE_DIR"/Image/Character/key.png");
+    m_key->SetZIndex(5);
+    m_key->SetPosition({197.5f, -3.5f});
+    m_key->SetVisible(false);
+    m_Root.AddChild(m_key);
 
     m_MapManager = std::make_unique<MapManager>(m_Root);
 
